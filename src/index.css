@@ -19,3 +19,74 @@ body { margin: 0; background: var(--bg); }
 .brand { font-weight: 700; }
 .navbar a { color: var(--primary); text-decoration: none; font-weight: 500; }
 .container { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
+.add-form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.add-form input {
+  flex: 1 1 160px; padding: 0.6rem; border: 1px solid var(--border); border-radius: 8px;
+}
+button {
+  padding: 0.6rem 1rem; border: 0; border-radius: 8px; cursor: pointer;
+  background: var(--primary); color: #fff; font-weight: 600;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--primary); outline-offset: 2px;
+}
+
+.items { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+
+.state { text-align: center; padding: 2rem 1rem; border-radius: 12px; }
+.state h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+.state p { margin: 0 0 1rem; color: var(--muted); }
+
+.state-loading { background: var(--surface); border: 1px solid var(--border); }
+.spinner {
+  width: 32px; height: 32px; margin: 0 auto 0.75rem; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--primary);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.state-error { background: var(--danger-bg); border: 1px solid #fecaca; color: var(--danger); }
+.state-error p { color: var(--danger); }
+.state-error button { background: var(--danger); }
+
+.state-empty { background: transparent; border: 2px dashed var(--border); }
+
+@media (max-width: 480px) {
+  .container { padding: 1rem; }
+  .add-form button { width: 100%; }
+}
+.book {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--surface); padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 8px;
+}
+.book img, .cover-placeholder {
+  width: 48px; height: 72px; border-radius: 4px; object-fit: cover;
+  flex-shrink: 0; background: var(--border);
+}
+.cover-placeholder { display: grid; place-items: center; }
+.book-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.book-info span { color: var(--muted); font-size: 0.85rem; }
+.book button.remove { background: transparent; color: var(--danger); }
+.section-title { margin: 1.5rem 0 0.75rem; font-size: 1.1rem; }
+.search-status { color: var(--muted); }
+.search-field { position: relative; flex: 1 1 160px; display: flex; }
+.search-field input { width: 100%; padding-right: 2.2rem; }
+.clear {
+  position: absolute; right: 0.3rem; top: 50%; transform: translateY(-50%);
+  background: transparent; color: var(--muted);
+  padding: 0.2rem 0.5rem; font-size: 1.2rem; line-height: 1;
+}
+
+.demo-controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem; font-size: 0.85rem; color: var(--muted);
+}
+.demo-controls button {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); padding: 0.35rem 0.75rem;
+}
+.demo-controls button.active {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+}

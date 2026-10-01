@@ -1,7 +1,8 @@
 # Reading List
 
 A small app to save articles and things to read later.
-
+# Deploy
+[https://booklover-bookshelf.vercel.app/reading-list](https://booklover-bookshelf.vercel.app/reading-list)
 ## Getting started
 
     npm install
@@ -13,7 +14,7 @@ A small app to save articles and things to read later.
 - Add books to your list and remove them (async data layer over localStorage)
 - Distinct loading, error (with retry) and empty states
 ## Testing the states
-Use the **Demo states** buttons at the top of the page, or open these URLs directly:
+Use the **Demo states** buttons at the top of the page, or open these URLs directly:<br>
 Open these URLs, no code changes needed:
 
 | State   | URL                           |

@@ -1,8 +1,7 @@
 # Reading List
 
 A small app to save articles and things to read later.
-# Deploy
-[https://booklover-bookshelf.vercel.app/reading-list](https://booklover-bookshelf.vercel.app/reading-list)
+
 ## Getting started
 
     npm install
@@ -30,6 +29,9 @@ Open these URLs, no code changes needed:
 - `src/components/StateViews.jsx`: loading / error / empty views
 - `src/pages/ReadingListPage.jsx`: page logic and the `?state=` demo override
 - `src/api/openLibrary.js`: book search against the Open Library REST API
+
+# Preview
+<img width="975" height="911" alt="image" src="https://github.com/user-attachments/assets/78b2d88d-e0a3-477b-bbf6-6721a2be4ca5" />
 
 ## Stack
 

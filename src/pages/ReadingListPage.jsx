@@ -21,6 +21,7 @@ export default function ReadingListPage() {
   const [results, setResults] = useState([])
   const [searchStatus, setSearchStatus] = useState('idle') // idle | loading | error | done
   const searchRef = useRef(null)
+  const [actionError, setActionError] = useState('')
 
   const load = useCallback(async () => {
     setStatus('loading')
@@ -72,13 +73,23 @@ export default function ReadingListPage() {
   }
 
   async function handleAdd(book) {
-    const item = await addItem(book)
-    setItems((prev) => (prev.some((i) => i.id === item.id) ? prev : [item, ...prev]))
+    try {
+      setActionError('')
+      const item = await addItem(book)
+      setItems((prev) => (prev.some((i) => i.id === item.id) ? prev : [item, ...prev]))
+    } catch {
+      setActionError("Couldn't save this book. Your browser storage may be full or blocked. Try again.")
+    }
   }
 
   async function handleRemove(id) {
-    await removeItem(id)
-    setItems((prev) => prev.filter((i) => i.id !== id))
+    try {
+      setActionError('')
+      await removeItem(id)
+      setItems((prev) => prev.filter((i) => i.id !== id))
+    } catch {
+      setActionError("Couldn't remove this book. Try again.")
+    }
   }
 
   const isSaved = (id) => items.some((i) => i.id === id)
@@ -136,7 +147,7 @@ export default function ReadingListPage() {
           </ul>
         </>
       )}
-
+      {actionError && <p className="search-status" role="alert">{actionError}</p>}
       <h2 className="section-title">My list</h2>
       {status === 'loading' && <LoadingState />}
       {status === 'error' && (

@@ -15,9 +15,7 @@ function write(items) {
 
 export async function fetchItems() {
   await delay(600)
-  const raw = localStorage.getItem(KEY)
-  if (raw === null) return []
-  return JSON.parse(raw) // hedh error nëse të dhënat janë të korruptuara
+  return JSON.parse(localStorage.getItem(KEY) ?? '[]') // hedh error nëse janë të korruptuara
 }
 
 export async function addItem(book) {

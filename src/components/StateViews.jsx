@@ -11,7 +11,7 @@ export function ErrorState({ onRetry }) {
   return (
     <div className="state state-error" role="alert">
       <h2>We couldn't load your reading list.</h2>
-      <p>Please check your connection and try again.</p>
+      <p>Your saved data could not be loaded. Try again. If it keeps failing, clear this site's data in your browser settings.</p>
       <button onClick={onRetry}>Try again</button>
     </div>
   )
@@ -21,8 +21,8 @@ export function EmptyState({ onAdd }) {
   return (
     <div className="state state-empty">
       <h2>Your reading list is empty.</h2>
-      <p>Save articles and other things you want to come back to later.</p>
-      <button onClick={onAdd}>Add your first item</button>
+      <p>Keep track of books you want to read. Search for a title above and add it here.</p>
+      <button onClick={onAdd}>Search for your first book</button>
     </div>
   )
 }

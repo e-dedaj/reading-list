@@ -4,7 +4,7 @@ export default function BookRow({ book, children }) {
       {book.coverUrl ? (
         <img src={book.coverUrl} alt="" width="48" height="72" loading="lazy" />
       ) : (
-        <div className="cover-placeholder" aria-hidden="true">📖</div>
+        <div className="cover-placeholder" aria-hidden="true">𓆩𖤐𓆪</div>
       )}
       <div className="book-info">
         <strong>{book.title}</strong>

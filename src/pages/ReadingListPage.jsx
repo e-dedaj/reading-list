@@ -1,32 +1,36 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { addItem, fetchItems, removeItem } from '../api/readingListApi.js'
-import { searchBooks } from '../api/openLibrary.js'
+import { useCallback, useEffect, useState } from 'react'
+import { useSearchParams, useNavigate  } from 'react-router-dom'
+import { fetchItems, removeItem } from '../api/readingListApi.js'
 import BookRow from '../components/BookRow.jsx'
 import DemoControls from '../components/DemoControls.jsx'
 import { EmptyState, ErrorState, LoadingState } from '../components/StateViews.jsx'
+import SearchPage from './SearchPage.jsx'
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
 
-export default function ReadingListPage() {
+export default function ReadingListPage({ withSearch = false }) {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const forcedState = searchParams.get('state') // loading | error | empty | null
-
-  // lista ime
+  const forcedState = searchParams.get('state') 
+  // list
   const [items, setItems] = useState([])
   const [status, setStatus] = useState('loading') // loading | error | ready
 
-  // kërkimi
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState([])
-  const [searchStatus, setSearchStatus] = useState('idle') // idle | loading | error | done
-  const searchRef = useRef(null)
+  // search
   const [actionError, setActionError] = useState('')
-
+  async function handleRemove(id) {
+    try {
+      setActionError('')
+      await removeItem(id)
+      setItems((prev) => prev.filter((i) => i.id !== id))
+    } catch {
+      setActionError("Couldn't remove this book. Try again.")
+    }
+  }
   const load = useCallback(async () => {
     setStatus('loading')
 
-    // Demo mode: reviewer-i i shikon gjendjet pa prekur kodin
+    // Demo mode
     if (forcedState === 'loading') return
     if (forcedState === 'error') {
       await wait(600)
@@ -39,7 +43,6 @@ export default function ReadingListPage() {
       setStatus('ready')
       return
     }
-
     try {
       setItems(await fetchItems())
       setStatus('ready')
@@ -47,108 +50,27 @@ export default function ReadingListPage() {
       setStatus('error')
     }
   }, [forcedState])
-
   useEffect(() => {
     load()
   }, [load])
 
-  async function handleSearch(e) {
-    e.preventDefault()
-    const q = query.trim()
-    if (!q) return
-    setSearchStatus('loading')
-    try {
-      setResults(await searchBooks(q))
-      setSearchStatus('done')
-    } catch {
-      setSearchStatus('error')
-    }
-  }
-
-  function handleClear() {
-    setQuery('')
-    setResults([])
-    setSearchStatus('idle')
-    searchRef.current?.focus()
-  }
-
-  async function handleAdd(book) {
-    try {
-      setActionError('')
-      const item = await addItem(book)
-      setItems((prev) => (prev.some((i) => i.id === item.id) ? prev : [item, ...prev]))
-    } catch {
-      setActionError("Couldn't save this book. Your browser storage may be full or blocked. Try again.")
-    }
-  }
-
-  async function handleRemove(id) {
-    try {
-      setActionError('')
-      await removeItem(id)
-      setItems((prev) => prev.filter((i) => i.id !== id))
-    } catch {
-      setActionError("Couldn't remove this book. Try again.")
-    }
-  }
-
-  const isSaved = (id) => items.some((i) => i.id === id)
-
+  
   return (
     <section>
-      <h1>Reading list</h1>
+      <h1>{withSearch ? '𝖍𝖔𝖒𝖊' : '𝖒𝖞 𝖑𝖎𝖘𝖙'}</h1>
 
-      <DemoControls />
+      {withSearch && (<>
+        <DemoControls />
+        <SearchPage
+          savedIds={items.map((i) => i.id)}
+          onAdded={(item) =>
+            setItems((prev) => (prev.some((i) => i.id === item.id) ? prev : [item, ...prev]))
+          }
+        />
+        <h2 className="section-title">My list</h2>
+      </>)}
 
-      <form className="add-form" onSubmit={handleSearch}>
-        <div className="search-field">
-          <input
-            ref={searchRef}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search a book by title or author"
-            aria-label="Search books"
-          />
-          {(query || searchStatus !== 'idle') && (
-            <button
-              type="button"
-              className="clear"
-              onClick={handleClear}
-              aria-label="Clear search"
-            >
-              ×
-            </button>
-          )}
-        </div>
-        <button type="submit" disabled={searchStatus === 'loading'}>
-          {searchStatus === 'loading' ? 'Searching...' : 'Search'}
-        </button>
-      </form>
-
-      {searchStatus === 'error' && (
-        <p className="search-status" role="alert">
-          Search failed. Please check your connection and try again.
-        </p>
-      )}
-      {searchStatus === 'done' && results.length === 0 && (
-        <p className="search-status">No books found.</p>
-      )}
-      {searchStatus === 'done' && results.length > 0 && (
-        <>
-          <h2 className="section-title">Results</h2>
-          <ul className="items">
-            {results.map((book) => (
-              <BookRow key={book.id} book={book}>
-                <button onClick={() => handleAdd(book)} disabled={isSaved(book.id)}>
-                  {isSaved(book.id) ? 'Added' : 'Add'}
-                </button>
-              </BookRow>
-            ))}
-          </ul>
-        </>
-      )}
       {actionError && <p className="search-status" role="alert">{actionError}</p>}
-      <h2 className="section-title">My list</h2>
       {status === 'loading' && <LoadingState />}
       {status === 'error' && (
         <ErrorState
@@ -156,7 +78,10 @@ export default function ReadingListPage() {
         />
       )}
       {status === 'ready' && items.length === 0 && (
-        <EmptyState onAdd={() => searchRef.current?.focus()} />
+        <EmptyState onAdd={() => withSearch
+          ? document.querySelector('input[aria-label="Search books"]')?.focus()
+          : navigate('/reading-list')
+        } />
       )}
       {status === 'ready' && items.length > 0 && (
         <ul className="items">

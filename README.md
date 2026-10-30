@@ -30,6 +30,8 @@ Use the **Demo states** buttons at the top of the page, or open these URLs direc
 - `src/components/StateViews.jsx`: loading / error / empty views
 - `src/pages/ReadingListPage.jsx`: page logic and the `?state=` demo override
 - `src/api/openLibrary.js`: book search against the Open Library API
+- `src/pages/SearchPage.jsx`: book search and add (`/search`)
+- `src/pages/ReadingListPage.jsx`: saved list and the `?state=` demo override (`/reading-list`)
 
 ## Where data is stored
 

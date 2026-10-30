@@ -6,7 +6,8 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/reading-list" element={<ReadingListPage />} />
+        <Route path="/reading-list" element={<ReadingListPage withSearch/>} />
+        <Route path="/my-list" element={<ReadingListPage />} />
         <Route path="*" element={<Navigate to="/reading-list" replace />} />
       </Route>
     </Routes>
